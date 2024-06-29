@@ -6,7 +6,7 @@ import streamlit as st
 import plotly.express as px
 
 # Import Data
-df = pd.read_csv("Sprint-4-Project/vehicles_us.csv")
+df = pd.read_csv("vehicles_us.csv")
 
 # Rename model column to make_model to prepare for change
 df = df.rename(columns={'model':'make_model'})
@@ -21,20 +21,33 @@ df['model'] = df['model'].apply(lambda x:' '.join(x))
 df['model_year'] = df['model_year'].fillna('N/A')
 df['cylinders'] = df['cylinders'].fillna('N/A')
 df['odometer'] = df['odometer'].fillna('N/A')
-df['paint_color'] = df['paint_color'].fillna('N/A')
 # Fill null values in is_4wd column with 0.00 to indicate no 4-wheel drive
 df['is_4wd'] = df['is_4wd'].fillna(0.0)
 
 # Streamlit Apps
+
 # Create a text header above the dataframe
 st.header('Data viewer') 
 # display the dataframe with streamlit
 st.dataframe(df)
+
 # Create Vehicle types by manufacturer histogram
 st.header('Vehicle type by Manufactuer')
 fig = px.histogram(df, x='make',color='type')
 # Display with streamlit
 st.write(fig)
+
+# Create Price versus Vehicle Color
+st.header('Price by Vehicle Color')
+color_map = df['paint_color'].unique()
+fig = px.histogram(df, x='paint_color', y='price', 
+                   color='paint_color',
+                   color_discrete_map={'white':'white','red':'red','black':'black', 'blue':'blue', 'grey':'grey', 'silver':'silver', 'custom':'teal', 'orange':'orange', 'yellow':'yellow', 'brown':'brown', 'green':'green', 'purple':'purple'},
+                   labels={'price':'price ($)','paint_color':'vehicle color'})
+fig.update_layout(plot_bgcolor = 'tan')
+st.write(fig)
+
+# Create Price versus Days Listed
 
 # Create price distribution
 st.header('Compare price distribution between manufacturers')
@@ -71,4 +84,33 @@ fig = px.histogram(df_filtered,
                       histnorm=histnorm,
                       barmode='overlay')
 # display the figure with streamlit
+st.write(fig)
+
+# Create Various Price Scatter
+st.header('Price Scatter by Various')
+x_list = ['model_year','odometer','days_listed']
+x_select = st.selectbox(
+                        label='Select data',
+                        options=x_list,
+                        index=x_list.index('model_year')
+)
+# Select Unique Options for each scatter plot
+if x_select == 'model_year':
+    color_select = ['blue']
+    title_select = 'Price by Vehicle Year'
+    label_select = {'price':'Price ($)','model_year':'Vehicle Year'}
+elif x_select == 'odometer':
+    color_select = ['green']
+    title_select = 'Price by Mileage'
+    label_select = {'price':'Price ($)','odometer':'Mileage (mi)'}
+elif x_select == 'days_listed':
+    color_select = ['brown']
+    title_select = 'Price by Time Listed'
+    label_select = {'price':'Price ($)','days_listed':'No. Days Listed'}
+# Create Scatterplots
+fig = px.scatter(df, x=x_select, y='price',
+                 color_discrete_sequence=color_select,
+                 title=title_select,
+                 labels=label_select
+                )
 st.write(fig)
