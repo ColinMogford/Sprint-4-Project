@@ -11,7 +11,7 @@ To launch project on your local machine:
 1. Clone project directory to local machine via github
 2. Ensure all libraries are installed and versions match the list below
 3. Navigate to your the repository's root folder through your terminal
-4. Run 'steamlit run app.py' in your terminal
+4. Run `steamlit run app.py` in your terminal
 5. If web browser does not automatically open, click the local host URL provided in the terminal output.
 
 Libraries Used: 
