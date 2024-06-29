@@ -17,13 +17,6 @@ df['model'] = df['make_model'].str.split().str[1:]
 # Above change leaves the model column as a series of lists. Below will concatenate the lists into single spaced strings
 df['model'] = df['model'].apply(lambda x:' '.join(x))
 
-# Fill null values
-df['model_year'] = df['model_year'].fillna('N/A')
-df['cylinders'] = df['cylinders'].fillna('N/A')
-df['odometer'] = df['odometer'].fillna('N/A')
-# Fill null values in is_4wd column with 0.00 to indicate no 4-wheel drive
-df['is_4wd'] = df['is_4wd'].fillna(0.0)
-
 # Streamlit Apps
 
 # Create a text header above the dataframe
